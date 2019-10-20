@@ -1,0 +1,100 @@
+using System;
+
+
+namespace GuessTheNumber
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.WriteLine("============================");
+            Console.WriteLine("===== GUESS THE NUMBER =====");
+            Console.WriteLine("============================");
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine("PLEASE SELECT LEVEL:");
+            Console.WriteLine();
+            Console.WriteLine("1. LEVEL 1 - Guess a number from 0 to 10 in 3 trails");
+            Console.WriteLine("2. LEVEL 2 - Guess a number from 0 to 20 in 6 trails");
+            Console.WriteLine("3. LEVEL 3 - Guess a number from 0 to 30 in 9 trails");
+            Console.WriteLine("4. CUSTOM - You set the rules");
+            Console.WriteLine();
+            
+
+            int level = -1;
+            int number = 0;
+            int counter = 0;
+
+            while(level > 4 || level < 1)
+            {
+                Console.WriteLine("Enter your level 1-4 :");
+                level = int.Parse(Console.ReadLine());
+                
+            }
+
+            switch(level)
+            {
+                    case 1:
+                        number = genNum(0, 10);
+                counter = 3;
+                break;
+                    case 2:
+                        number = genNum(0, 20);
+                counter = 5;
+                break;
+                    case 3:
+                        number = genNum(0, 30);
+                counter = 6;
+                break;
+                    case 4:
+                      Console.WriteLine("Enter a start number:");
+                      int start = int.Parse(Console.ReadLine());
+                      Console.WriteLine("Enter a end number:");
+                      int end = int.Parse(Console.ReadLine());
+                      Console.WriteLine("Enter a  number of trails:");
+                      int trails = int.Parse(Console.ReadLine());
+                 number = genNum(start, end);
+                    counter = trails;
+                 break;
+
+            }
+            while (counter > 0)
+            {
+                Console.WriteLine("Guess the number - try [{0}]:", counter);
+                int guess = int.Parse(Console.ReadLine());
+
+                if (guess == number)
+                {
+                    Console.WriteLine("You WON the game");
+                    break;
+                    
+                }else
+                {
+                    if(guess < number)
+                    {
+                        Console.WriteLine("Your guess is lower than the number.");
+                    } else
+                    {
+                        Console.WriteLine("Your guess is higher then the number.");
+                    }
+                    
+                    counter--;
+                }
+
+                if(counter == 0)
+                {
+                    Console.WriteLine("You LOST yhe game. The number is {0}",number);
+                }
+            }
+
+
+
+
+        }
+        static int genNum(int start,int end)
+        {
+            Random randomNumber = new Random();
+            return randomNumber.Next(start, end);
+        }
+    }
+}
