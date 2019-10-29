@@ -1,0 +1,36 @@
+using System;
+
+namespace Treasure_Finder
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.WriteLine("Enter the key:");
+            string key = Console.ReadLine();
+            Console.WriteLine("Enter the secret message:");
+            string message = Console.ReadLine();
+            int keycounter = 0;
+            int newChar;
+           
+            foreach (char c in message)
+            {
+                if (keycounter >= key.Length)
+                {
+                    keycounter = 0;
+                }
+
+                newChar = (int)c - int.Parse(Char.ToString(key[keycounter]));
+
+                Console.Write((char)newChar);
+
+                keycounter++;
+
+                //key = 72277
+                //messages = ( okfklu(ivsk(c{C82P>7^@ )  ; ( oqth?-iqsk-cvC;908===:5U9:05<9<:5LE ) ; ( {jgylPu(Zpsxgy-hvEvvyfkuh{guC:9U6:^E )
+                // ( oqth-nqnk-hv>;9588==?5P9:5579<?5GE )
+
+            }
+        }
+    }
+}
