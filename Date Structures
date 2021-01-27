@@ -1,0 +1,339 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+
+namespace HomeWork_Streams
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            while (true)
+            {
+                Console.WriteLine("Option 1 : Sorting Numbers");
+                Console.WriteLine("Option 2 : Word Counter");
+                Console.WriteLine("Option 3 : Brackets Cheker");
+                Console.WriteLine("Option 4 : Symbol Counter");
+                Console.WriteLine("Option 5 : Calculator");
+                Console.WriteLine("Option 6 : Exit");
+                Console.Write("Choose an option : ");
+
+                string command = Console.ReadLine();
+
+                if (command == "1")
+                {
+                    SortingNumbers();
+                }
+                else if (command == "2")
+                {
+                    WordCounter();
+                }
+                else if (command == "3")
+                {
+                    BracketsCheker();
+                }
+                else if (command == "4")
+                {
+                    SymbolCounter();
+                }
+                else if (command == "5")
+                {
+                    ShutingYard();
+                }
+                else if (command == "6")
+                {
+                    Console.WriteLine();
+                    Console.WriteLine("You exit the program!!!");
+                    Console.WriteLine("Have a nice day!!!");
+                    Console.WriteLine();
+                    break;
+                }
+                else
+                {
+                    Console.WriteLine();
+                    Console.WriteLine("Invalid command, please try again!!!");
+                    Console.WriteLine();
+                }
+                Console.WriteLine("Press ENTER to continue");
+                Console.ReadLine();
+            }
+        }
+        public static void SortingNumbers()
+        {
+            Console.Write("Please write your file : ");
+            string fileName = Console.ReadLine();
+            List<double> input = new List<double>();
+            using (StreamReader reader = new StreamReader(fileName))
+            {
+                string line = reader.ReadLine();
+                while (line != null)
+                {
+                    input.Add(double.Parse(line));
+                    line = reader.ReadLine();
+                }
+                BubbleSort(input);
+                Console.WriteLine();
+                Console.WriteLine($"Avarege : {input.Average()}");
+                Console.WriteLine($"Sum : {input.Sum()}");
+                Console.WriteLine($"Min : {input[0]}");
+                Console.WriteLine($"Max : {input[input.Count - 1]}");
+                Console.WriteLine($"Second Min : {input[1]}");
+                Console.WriteLine($"Second Max : {input[input.Count - 2]}");
+                Console.WriteLine();
+            }
+            using (StreamWriter writer = new StreamWriter(@"sortednumbers.txt"))
+            {
+                writer.WriteLine(string.Join(" ", input));
+            }
+        }
+        static void BubbleSort(List<double> list)
+        {
+            for (int j = 0; j < list.Count - 1; j++)
+            {
+                for (int i = 0; i < list.Count - 1; i++)
+                {
+                    if (list[i] > list[i + 1])
+                    {
+                        double temp = list[i];
+                        list[i] = list[i + 1];
+                        list[i + 1] = temp;
+                    }
+                }
+            }
+        }
+        public static void WordCounter()
+        {
+            Console.Write("Please write your file : ");
+            string fileName = Console.ReadLine();
+            Console.Write("Write down the word you are looking for : ");
+            string word = Console.ReadLine();
+            using (StreamReader reader = new StreamReader(fileName))
+            {
+                int counter = 0;
+                string line = reader.ReadLine();
+                while (line != null)
+                {
+                    int index = line.IndexOf(word);
+                    while (index != -1)
+                    {
+                        counter++;
+                        index = line.IndexOf(word, (index + 1));
+                    }
+                    line = reader.ReadLine();
+                }
+                Console.WriteLine($"{word}, with lower letters, occurs : {counter}");
+            }
+            using (StreamReader reader = new StreamReader(fileName))
+            {
+                word = word.ToLower();
+                int counter = 0;
+                string line = reader.ReadLine().ToLower();
+                while (line != null)
+                {
+                    int index = line.IndexOf(word);
+                    while (index != -1)
+                    {
+                        counter++;
+                        index = line.IndexOf(word, (index + 1));
+                    }
+                    line = reader.ReadLine();
+                    if (line != null)
+                    {
+                        line = line.ToLower();
+                    }
+                }
+
+                Console.WriteLine($"{word} all occurs : {counter}");
+                Console.WriteLine();
+            }
+        }
+        public static void BracketsCheker()
+        {
+            Console.Write("Please write your file : ");
+            string fileName = Console.ReadLine();
+            Console.WriteLine();
+            Stack<char> stack = new Stack<char>();
+            bool a = false;
+            using (StreamReader reader = new StreamReader(fileName))
+            {
+                string line = reader.ReadLine();
+                while (line != null)
+                {
+                    foreach (char ch in line)
+                    {
+                        if (ch == '(' || ch == '{' || ch == '[')
+                        {
+                            stack.Push(ch);
+                        }
+                        else if (ch == ')' || ch == '}' || ch == ']')
+                        {
+                            if (stack.Count == 0)
+                            {
+                                Console.WriteLine("Incorrect");
+                                Console.WriteLine();
+                                a = true;
+                                break;
+                            }
+                            else
+                            {
+                                stack.Pop();
+                            }
+                        }
+
+                    }
+                    line = reader.ReadLine();
+                }
+                if (stack.Count == 0 && a == false)
+                {
+                    Console.WriteLine("Correct");
+                    Console.WriteLine();
+                }
+            }
+        }
+        public static void SymbolCounter()
+        {
+            Console.Write("Please write your file : ");
+            string fileName = Console.ReadLine();
+            Console.WriteLine();
+            Dictionary<char, double> output = new Dictionary<char, double>();
+            int fullCounter = 0;
+
+            using (StreamReader reader = new StreamReader(fileName))
+            {
+                string line = reader.ReadLine();
+
+                while (line != null)
+                {
+                    foreach (var item in line)
+                    {
+                        fullCounter++;
+                        if (output.ContainsKey(item))
+                        {
+                            output[item] = output[item] + 1;
+                        }
+                        else
+                        {
+                            output.Add(item, 1);
+                        }
+                    }
+                    line = reader.ReadLine();
+                }
+
+                foreach (var item in output)
+                {
+                    double num = item.Value / fullCounter * 100;
+                    Console.WriteLine($"{item.Key} - {num:f2}%");
+                }
+            }
+            Console.WriteLine();
+        }
+        public static void ShutingYard()
+        {
+            Console.Write("Please write your file : ");
+            string fileName = Console.ReadLine();
+            string[] input = File.ReadAllLines(fileName);
+            for (int i = 0; i < input.Length; i++)
+            {
+               int output  = Calculation(input[i]);
+                input[i] += " = " + output;
+            }
+            File.WriteAllLines(@"calculatoroutput.txt", input);
+            Console.WriteLine();
+        }
+        static int Calculation(string a)
+        {
+            string[] input = a.Split();
+            Queue<string> output = new Queue<string>();
+            Stack<string> @operator = new Stack<string>();
+            for (int i = 0; i < input.Length; i++)
+            {
+                int temp;
+                if (int.TryParse(input[i], out temp))
+                {
+                    output.Enqueue(input[i]);
+                }
+                else if (input[i] == "+" || input[i] == "-" || input[i] == "*" || input[i] == "/")
+                {
+                    while (@operator.Count > 0 && ((@operator.Peek() == "*" || @operator.Peek() == "/") || @operator.Peek() == "-") && @operator.Peek() != "(")
+                    {
+                        output.Enqueue(@operator.Pop());
+                    }
+                    @operator.Push(input[i]);
+                }
+                else if (input[i] == "*" || input[i] == "/")
+                {
+                    while (@operator.Count > 0 && @operator.Peek() == "/" && @operator.Peek() != "(")
+                    {
+                        output.Enqueue(@operator.Pop());
+                    }
+                    @operator.Push(input[i]);
+                }
+                else if (input[i] == "(")
+                {
+                    @operator.Push(input[i]);
+                }
+                else if (input[i] == ")")
+                {
+                    while (@operator.Peek() != "(")
+                    {
+                        output.Enqueue(@operator.Pop());
+                    }
+                    @operator.Pop();
+                }
+            }
+            while (@operator.Count > 0)
+            {
+                output.Enqueue(@operator.Pop());
+            }
+            string RPN = "";
+            while (output.Count > 1)
+            {
+                RPN += output.Dequeue() + " ";
+            }
+            RPN += output.Dequeue();
+            int finalOutput = Program.Calculator(RPN);
+            return finalOutput;
+        }
+        static int Calculator(string read)
+        {
+            string[] input = read.Split();
+            Stack<int> stack = new Stack<int>();
+
+            for (int i = 0; i < input.Length; i++)
+            {
+                int temp;
+                if (int.TryParse(input[i], out temp))
+                {
+                    stack.Push(temp);
+                }
+                else
+                {
+                    if (input[i] == "-")
+                    {
+                        int minus = stack.Pop();
+                        stack.Push(stack.Pop() - minus);
+                    }
+                    else if (input[i] == "+")
+                    {
+                        int plus = stack.Pop();
+                        stack.Push(stack.Pop() + plus);
+                    }
+                    else if (input[i] == "*")
+                    {
+                        int times = stack.Pop();
+                        stack.Push(stack.Pop() * times);
+                    }
+                    else if (input[i] == "/")
+                    {
+                        int divide = stack.Pop();
+                        stack.Push(stack.Pop() / divide);
+                    }
+                }
+            }
+
+            return stack.Pop();
+        }
+    }
+}
